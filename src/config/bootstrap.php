@@ -11,6 +11,16 @@ require ROOT . '/src/controllers/AuthController.php';
 require ROOT . '/src/controllers/CourseController.php';
 require ROOT . '/src/controllers/AdminController.php';
 
+set_exception_handler(function(Throwable $e) {
+    http_response_code(500);
+    if (file_exists(ROOT . '/public/500.php')) {
+        include ROOT . '/public/500.php';
+    } else {
+        echo '<h1>500 — Server Error</h1>';
+    }
+    exit;
+});
+
 function auth(): ?array {
     return $_SESSION['user'] ?? null;
 }

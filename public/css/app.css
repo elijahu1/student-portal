@@ -79,3 +79,8 @@ tbody td { padding: .7rem 1rem; vertical-align: middle; }
 .flex-between { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .75rem; margin-bottom: 1.25rem; }
 .empty { text-align: center; padding: 3rem 1rem; color: var(--muted); font-style: italic; }
 .mono { font-family: 'DM Mono', monospace; }
+
+/* Search */
+.search-wrap { margin-bottom: 1.25rem; }
+.search-wrap input { max-width: 400px; padding: .65rem 1rem; border: 1px solid var(--border); border-radius: var(--radius); font-size: .9rem; width: 100%; }
+.search-wrap input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(29,63,110,.1); }

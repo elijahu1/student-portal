@@ -2,10 +2,26 @@
 require_once __DIR__ . '/../../src/config/bootstrap.php';
 requireAdmin();
 $regs = Registration::allWithDetails();
+
+if (isset($_GET['export'])) {
+    header('Content-Type: text/csv');
+    header('Content-Disposition: attachment; filename="registrations.csv"');
+    $out = fopen('php://output', 'w');
+    fputcsv($out, ['#', 'Student', 'Email', 'Course Code', 'Course Title', 'Date']);
+    foreach ($regs as $i => $r) {
+        fputcsv($out, [$i+1, $r['student'], $r['email'], $r['code'], $r['title'], $r['registered_at']]);
+    }
+    fclose($out);
+    exit;
+}
+
 $title = 'All Registrations';
 include ROOT . '/views/layout/header.php';
 ?>
-<div class="page-header"><h1>All Registrations</h1><p>Every student–course registration</p></div>
+<div class="page-header flex-between" style="display:flex">
+  <div><h1>All Registrations</h1><p>Every student–course registration</p></div>
+  <a href="/admin/registrations.php?export=1" class="btn btn-primary btn-sm">Export CSV</a>
+</div>
 <div class="card" style="padding:0">
   <div class="table-wrap">
     <table>

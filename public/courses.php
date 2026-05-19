@@ -20,13 +20,18 @@ include ROOT . '/views/layout/header.php';
   <h1>Course Catalogue</h1>
   <p>Register or drop courses for the current semester</p>
 </div>
-<div class="card-grid">
+
+<div class="search-wrap">
+  <input type="text" id="courseSearch" placeholder="Search by code, title or semester…" autocomplete="off">
+</div>
+
+<div class="card-grid" id="courseGrid">
 <?php foreach ($courses as $c):
   $full = $c['enrolled'] >= $c['capacity'];
   $registered = in_array((int)$c['id'], $myRegIds, true);
   $pct = $c['capacity'] > 0 ? min(100, round($c['enrolled']/$c['capacity']*100)) : 0;
 ?>
-  <div class="course-card">
+  <div class="course-card" data-search="<?= strtolower(h($c['code'].' '.$c['title'].' '.$c['semester'])) ?>">
     <div><span class="course-code"><?= h($c['code']) ?></span><?php if ($full): ?> <span class="badge badge-full">Full</span><?php endif; ?></div>
     <div class="course-title"><?= h($c['title']) ?></div>
     <?php if ($c['description']): ?><p style="font-size:.82rem;color:var(--muted)"><?= h(mb_strimwidth($c['description'],0,90,'…')) ?></p><?php endif; ?>
@@ -52,4 +57,19 @@ include ROOT . '/views/layout/header.php';
   </div>
 <?php endforeach; ?>
 </div>
+<p id="noResults" style="display:none" class="empty">No courses match your search.</p>
+
+<script>
+document.getElementById('courseSearch').addEventListener('input', function() {
+  const q = this.value.toLowerCase().trim();
+  const cards = document.querySelectorAll('.course-card');
+  let visible = 0;
+  cards.forEach(card => {
+    const match = card.dataset.search.includes(q);
+    card.style.display = match ? '' : 'none';
+    if (match) visible++;
+  });
+  document.getElementById('noResults').style.display = visible === 0 ? '' : 'none';
+});
+</script>
 <?php include ROOT . '/views/layout/footer.php'; ?>
